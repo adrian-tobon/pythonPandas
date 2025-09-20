@@ -57,8 +57,8 @@ df_list_dict = pd.DataFrame(data_list_dict)
 print(df_list_dict.head())
 
 data_dict_list = {  'Nombre': ['Ana','Luis','Pedro','Ana'],
-                    'Edad':[25,30,22,29],
-                    'Ciudad': ['Madrid','Barcelona','Valencia','Sevilla']}
+                    'Edad':[25,30,None,29],
+                    'Ciudad': ['Madrid','Barcelona','Valencia',None]}
 
 df_dict_list = pd.DataFrame(data_dict_list)
 print(df_dict_list)
@@ -89,3 +89,62 @@ print(df_dict_list.loc[df_dict_list['Edad'] < 30])
 df_dict_list.sort_values(by='Edad',ascending=True, inplace=True)
 print(df_dict_list)
 
+print(df_dict_list['Edad'].mean())
+
+df_dict_list.fillna(value={'Edad':20,'Ciudad':'Lima'},inplace=True)
+print(df_dict_list)
+
+#df_dict_list.dropna(inplace=True)
+#print(df_dict_list)
+
+#Datos temporales 
+
+#Series
+fechas = pd.date_range(start='2025-01-01',periods=6,freq='D')
+valores = [34,44,65,53,39,76]
+
+serie_temporal = pd.Series(valores,index=fechas)
+
+print(serie_temporal)
+print(serie_temporal['2025-01-03'])
+print(serie_temporal['2025-01-01':'2025-01-03'])
+print(serie_temporal[serie_temporal.index > '2025-01-03'])
+
+#Dataframes
+data = {
+        'Fechas':pd.date_range(start='2025-01-01',periods=6,freq='D'),
+        'Valores':[345,456,653,513,379,476]
+        }
+
+df_temporal = pd.DataFrame(data)
+df_temporal.set_index('Fechas',inplace=True)
+print(df_temporal)
+
+df_mes = df_temporal.resample('M').mean()
+print(df_mes)
+
+df_temporal['Ventas Desplazadas'] = df_temporal['Valores'].shift(1)
+df_temporal['Cambio Ventas'] = df_temporal['Valores'].diff()
+
+print(df_temporal)
+
+fruits = {
+               'Producto':['Manzanas','Naranjas','Platanos','Uvas','Peras'],
+               'Precio': [100,80,60,120,90] 
+        
+        }
+
+df_fruits = pd.DataFrame(fruits)
+df_fruits.set_index('Producto',inplace=True)
+print(df_fruits)
+
+df_fruits_reindexed = df_fruits.reindex(['Naranjas','Manzanas','Platanos','Peras','Uvas'])
+print(df_fruits_reindexed)
+
+df_fruits.loc['Fresas'] = {'Precio': 42}
+print(df_fruits)
+
+
+otro_indice = ['Melones', 'Manzanas', 'Peras']
+interseccion_indices = df_fruits.index.intersection(otro_indice)
+print(interseccion_indices)
