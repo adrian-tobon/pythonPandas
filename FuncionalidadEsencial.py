@@ -50,3 +50,52 @@ df_fruits2.drop('Manzanas',axis=0,inplace=True)
 df_fruits2.drop('Stock',axis=1,inplace=True)
 print(df_fruits2)
 
+#Indexacion, Seleccion y filtrado
+fruits_3 = {
+               'Producto':['Manzanas','Naranjas','Platanos','Uvas','Peras'],
+               'Precio': [100,80,60,120,90],
+                'Stock': [30,50,20,60,40]
+        }
+
+df_fruits3 = pd.DataFrame(fruits_3)
+#df_fruits3.set_index('Producto',inplace=True)
+print(df_fruits3)
+
+#print(df_fruits3['Precio'])
+print(df_fruits3.loc[1,['Precio']])
+print(df_fruits3.loc[1,['Producto','Stock']])
+print(df_fruits3.iloc[1,[0,2]])
+
+print(df_fruits3[(df_fruits3.index >= 3) & (df_fruits3['Stock'] > 50)])
+print(df_fruits3.loc[(df_fruits3.index >= 3) | (df_fruits3['Stock'] > 50)])
+print(df_fruits3.iloc[df_fruits3.index >= 3])
+
+print(df_fruits3[df_fruits3.index >= 3].where(df_fruits3['Stock'] > 50,other=0))
+print(df_fruits3.loc[df_fruits3.index >= 3].where(df_fruits3['Stock'] > 50,other=0))
+print(df_fruits3.iloc[df_fruits3.index >= 3].where(df_fruits3['Stock'] > 50,other=0))
+
+
+print(df_fruits3[df_fruits3.index >= 3].query('Stock > 50'))
+print(df_fruits3.loc[df_fruits3.index >= 3].query('Stock > 50'))
+print(df_fruits3.iloc[df_fruits3.index >= 3].query('Stock > 50'))
+
+#funciones aritmetica y alineacion de datos
+
+#alineacion de series y dataframes
+s1 = pd.Series([10,20,30],index=['a','b','c'])
+s2 = pd.Series([40,50,60,70],index=['b','c','d','e'])
+
+s3 = s1+s2
+print(s3)
+
+s4 = s1.add(s2,fill_value=0)
+print(s4)
+
+df1 = pd.DataFrame({'A':[1,2],'B':[3,4]},index=[1,2]) 
+df2 = pd.DataFrame({'B':[5,6],'C':[7,8]},index=[2,3])
+
+df3 = df1 + df2
+print(df3)
+
+df4 = df1.add(df2,fill_value=0)
+print(df4) 
