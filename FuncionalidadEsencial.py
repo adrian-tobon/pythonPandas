@@ -1,5 +1,8 @@
 import pandas as pd
 
+def discount(precio):
+        return precio * 0.85
+
 fruits = {
                'Producto':['Manzanas','Naranjas','Platanos','Uvas','Peras'],
                'Precio': [100,80,60,120,90] 
@@ -99,3 +102,42 @@ print(df3)
 
 df4 = df1.add(df2,fill_value=0)
 print(df4) 
+
+#Aplicacion de funciones y mapeo
+
+#Aplicaion de funciones en dataframes
+fruits_4 = {
+               'Producto':['Manzanas','Naranjas','Platanos','Uvas','Peras'],
+               'Precio': [100,80,60,120,90]               
+        }
+
+df_fruits4 = pd.DataFrame(fruits_4)
+print(df_fruits4)
+
+df_fruits4['Precio con descuento'] = df_fruits4['Precio'].apply(discount)
+print(df_fruits4)
+
+df_fruits4['Producto'] = df_fruits4['Producto'].apply(lambda x: x.upper())
+print(df_fruits4)
+
+#mapeo
+fruits_5 = {
+               'Producto':['Manzanas','Naranjas','Platanos','Uvas','Peras'],
+               'Precio': [100,80,60,120,90]               
+        }
+
+df_fruits5 = pd.DataFrame(fruits_5)
+print(df_fruits5)
+
+#df_fruits5['Producto'] = df_fruits5['Producto'].map({'Manzanas':'Apples','Naranjas':'Oranges'})
+
+mapping = {'Manzanas':'Apples','Naranjas':'Oranges'}
+df_fruits5['Producto'] = df_fruits5['Producto'].map(lambda x: mapping.get(x,x))
+
+df_fruits5 = df_fruits5.map(lambda x: x.lower() if type(x) == str else x)
+print(df_fruits5)
+
+df_fruits5['Descuento'] = [10, 15, 10, 20,5]
+
+df_fruits5['Valor Final'] = df_fruits5.apply(lambda x: x['Precio'] - (100 - x['Descuento']) /100, axis = 1)
+print(df_fruits5)
