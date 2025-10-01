@@ -1,3 +1,4 @@
+from random import randint
 import pandas as pd
 
 #Concatenacion y tipos de Joins en dataframes
@@ -97,6 +98,7 @@ print(df_salary_by_dept)
 df_experience_years_mean_by_dept = df5.groupby('Departamento')['Años_Experiencia'].mean()
 print(df_experience_years_mean_by_dept)
 
+#agregacion
 df_salary_agg_by_dept = df5.groupby('Departamento')['Salario'].agg(['sum','max','min','mean'])
 print(df_salary_agg_by_dept)
 
@@ -117,3 +119,66 @@ df_multiple_agg_by_multiple_grouping = df5.groupby(['Departamento','Empleado']).
     })
 
 print(df_multiple_agg_by_multiple_grouping)
+
+#uso avanzado del groupby
+
+df5['Salario Normalizado'] = df5.groupby('Departamento')['Salario'].transform(lambda x: (x - x.mean())/x.std())
+print(df5)
+
+df_filter = df5.groupby('Departamento').filter(lambda x: len(x) > 2)
+print(df_filter)
+
+data6 = {
+        
+        'Fecha':pd.date_range(start='2025-01-01',periods=90,freq='D'),
+        'Ventas':[randint(1000,99999) for i in range(90)]
+}
+
+df6 = pd.DataFrame(data6)
+df6.set_index('Fecha',inplace=True)
+
+df_by_week = df6.groupby(pd.Grouper(freq='1M'))['Ventas'].sum()
+print(df_by_week)
+
+def rango_salarial(x):
+        return x['Salario'].max() - x['Salario'].min()
+
+def mean_salario(x):
+        return x['Salario'].mean()
+
+df5_normalized = df5.groupby('Departamento').apply(rango_salarial)
+print(df5_normalized)
+
+#Pivot Tables
+
+print(df5)
+pivot_table = df5.pivot_table(values='Salario',index='Departamento',aggfunc=['sum','mean'])
+print(pivot_table)
+
+pivot_table_years = df5.pivot_table(values='Salario',index=['Departamento','Empleado'],columns='Años_Experiencia',aggfunc=['sum','mean'])
+print(pivot_table_years)
+
+#cross tabulation
+cross_tab = pd.crosstab(df5['Departamento'],df5['Empleado'], values=df5['Salario'],aggfunc='sum',margins=True)
+print(cross_tab)
+
+cross_tab_normalize = pd.crosstab(df5['Departamento'],df5['Empleado'],normalize='index') 
+print(cross_tab_normalize)
+
+#Datos categoricos
+df5['Departamento'] = df5['Departamento'].astype('category')
+print(df5['Departamento'])
+
+print(df5['Departamento'].cat.categories)
+print(df5['Departamento'].cat.codes)
+
+df5['Departamento'] = df5['Departamento'].cat.reorder_categories(['IT','Ventas','Marketing'],ordered=True)
+print(df5['Departamento'])
+print(df5['Departamento'].cat.codes)
+
+
+df5['Departamento'] = df5['Departamento'].cat.add_categories(['Recursos Humanos'])
+print(df5['Departamento'])
+
+df5['Departamento'] = df5['Departamento'].cat.remove_categories(['Recursos Humanos'])
+print(df5['Departamento'])
