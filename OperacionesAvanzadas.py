@@ -182,3 +182,10 @@ print(df5['Departamento'])
 
 df5['Departamento'] = df5['Departamento'].cat.remove_categories(['Recursos Humanos'])
 print(df5['Departamento'])
+
+#codificacion One Hot
+one_hot = pd.get_dummies(df5['Departamento'], prefix='Departamento')
+print(one_hot)
+
+agrupacion_categorica = df5.groupby('Departamento')['Salario'].sum()
+print(agrupacion_categorica)
