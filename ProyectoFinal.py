@@ -26,7 +26,7 @@ print(df)
 df_candlestick = df['precio'].resample('D').ohlc()
 print(df_candlestick)
 
-mpf.plot(df_candlestick,type='candle',style='charles',title='Bitcoin - Velas Japonesas',ylabel='Precio (USD)')
+#mpf.plot(df_candlestick,type='candle',style='charles',title='Bitcoin - Velas Japonesas',ylabel='Precio (USD)')
 
 df.describe()
 
